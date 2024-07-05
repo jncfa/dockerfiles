@@ -73,13 +73,16 @@ RUN apt-get update && apt-get install -y \
   && rosdep init || echo "rosdep already initialized"
 
 ARG USERNAME=ros
-ARG USER_UID=1337
+ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
-# Create a non-root user
-RUN groupadd --gid $USER_GID $USERNAME \
+# Delete user ubuntu if it exists
+RUN id -u ubuntu >/dev/null 2>&1 && deluser --remove-home ubuntu
+
+# Add sudo support for the non-root user
+RUN : \   
+  && groupadd --gid $USER_GID $USERNAME \
   && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME \
-  # Add sudo support for the non-root user
   && apt-get update \
   && apt-get install -y sudo \
   && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME\

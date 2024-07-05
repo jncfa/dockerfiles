@@ -219,8 +219,6 @@ if __name__ == "__main__":
     log.addHandler(stream_handler)
 
     generate_dockerfiles(log)
-    generate_readmes(log)
     generate_docker_workflow(log)
-    generate_readme_workflow(log)
     generate_tasks(log)
     log.info("Finished generating dockerfiles.")
