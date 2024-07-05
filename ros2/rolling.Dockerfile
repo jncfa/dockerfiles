@@ -5,7 +5,7 @@
 ###########################################
 # Base image
 ###########################################
-FROM ubuntu:22.04 AS base
+FROM ubuntu:24.04 AS base
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -52,7 +52,7 @@ ENV AMENT_PREFIX_PATH=/opt/ros/rolling
 ENV COLCON_PREFIX_PATH=/opt/ros/rolling
 ENV LD_LIBRARY_PATH=/opt/ros/rolling/lib
 ENV PATH=/opt/ros/rolling/bin:$PATH
-ENV PYTHONPATH=/opt/ros/rolling/local/lib/python3.10/dist-packages:/opt/ros/rolling/lib/python3.10/site-packages
+ENV PYTHONPATH=/opt/ros/rolling/local/lib/python3.12/dist-packages:/opt/ros/rolling/lib/python3.12/site-packages
 ENV ROS_PYTHON_VERSION=3
 ENV ROS_VERSION=2
 ENV DEBIAN_FRONTEND=
@@ -80,7 +80,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN rosdep init || echo "rosdep already initialized"
 
 ARG USERNAME=ros
-ARG USER_UID=1000
+ARG USER_UID=1337
 ARG USER_GID=$USER_UID
 
 # Create a non-root user

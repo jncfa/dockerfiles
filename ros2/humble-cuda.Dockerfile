@@ -98,7 +98,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN rosdep init || echo "rosdep already initialized"
 
 ARG USERNAME=ros
-ARG USER_UID=1000
+ARG USER_UID=1337
 ARG USER_GID=$USER_UID
 
 # Create a non-root user

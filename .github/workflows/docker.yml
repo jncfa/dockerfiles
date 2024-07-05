@@ -161,6 +161,68 @@ jobs:
           tags: |
             jncfa/ros2:rolling-gazebo
             jncfa/ros2:rolling-gazebo-${{ steps.date.outputs.date }}
+  ros2-jazzy:
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: Set current date
+        id: date
+        run: |
+          echo "date=$(date +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+      - name: Use current date
+        run: |
+          echo "Current date is ${{ steps.date.outputs.date }}"
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          username: jncfa
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+    
+      - name: Build and push base
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: ros2/jazzy.Dockerfile
+          target: base
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            jncfa/ros2:jazzy-base
+            jncfa/ros2:jazzy-base-${{ steps.date.outputs.date }}
+      - name: Build and push dev
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: ros2/jazzy.Dockerfile
+          target: dev
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            jncfa/ros2:jazzy-dev
+            jncfa/ros2:jazzy-dev-${{ steps.date.outputs.date }}
+      - name: Build and push full
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: ros2/jazzy.Dockerfile
+          target: full
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            jncfa/ros2:jazzy-full
+            jncfa/ros2:jazzy-full-${{ steps.date.outputs.date }}
+      - name: Build and push gazebo
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: ros2/jazzy.Dockerfile
+          target: gazebo
+          platforms: linux/amd64
+          tags: |
+            jncfa/ros2:jazzy-gazebo
+            jncfa/ros2:jazzy-gazebo-${{ steps.date.outputs.date }}
   ros2-iron:
     runs-on: ubuntu-latest
     steps:
@@ -709,6 +771,7 @@ jobs:
         - generate
         - ros-noetic
         - ros2-rolling
+        - ros2-jazzy
         - ros2-iron
         - ros2-iron-cuda
         - ros2-humble
