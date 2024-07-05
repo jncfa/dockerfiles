@@ -8,7 +8,7 @@ from generate import templates
 from generate import generate_dockerfiles as gen
 
 TODAY = date.today()
-USER = "althack"
+USER = "jncfa"
 
 log = logging.getLogger(__name__)
 
