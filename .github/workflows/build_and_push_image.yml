@@ -32,7 +32,7 @@ on:
       platforms:
         required: false
         type: string
-        default: linux/amd64,linux/arm64
+        default: linux/amd64,linux/arm64,linux/arm64/v8
 jobs:
   changes:
     runs-on: ${{ inputs.runner }}
