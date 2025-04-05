@@ -8,6 +8,13 @@ on:
     # * is a special character in YAML so you have to quote this string
     - cron: "0 0 1 * *"
   workflow_dispatch:
+    inputs:
+      force-build:
+        type: choice
+        description: Force build of all images
+        options: 
+        - true
+        - false
 
 # Cancel in-progress runs of the same workflow
 concurrency:
@@ -28,4 +35,5 @@ jobs:
       tag: ${{ matrix.tag }}
       dockerfile: ${{ matrix.dockerfile }}
       should-push: ${{ github.ref == 'refs/heads/main' }}
+      force-build: ${{ inputs.force-build }}
     secrets: inherit

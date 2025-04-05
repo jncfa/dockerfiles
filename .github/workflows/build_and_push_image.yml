@@ -21,9 +21,14 @@ on:
         required: false
         type: string
         default: ubuntu-latest
+      force-build:
+        required: false
+        type: boolean
+        default: false
 jobs:
   changes:
     runs-on: ${{ inputs.runner }}
+    if: inputs.force-build == 'false'
     permissions:
       pull-requests: read
     outputs:
@@ -41,7 +46,7 @@ jobs:
   docker:
     runs-on: ${{ inputs.runner }}
     needs: changes
-    if: needs.changes.outputs.is_changed == 'true'
+    if: inputs.force-build == 'true' || needs.changes.outputs.is_changed == 'true'
     steps:
       - uses: actions/checkout@v4
       - 
