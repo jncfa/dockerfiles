@@ -12,6 +12,7 @@ on:
       force-build:
         type: choice
         description: Force build all images
+        default: false
         options: 
         - true
         - false
