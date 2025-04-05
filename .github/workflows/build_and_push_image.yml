@@ -17,14 +17,12 @@ on:
         required: false
         type: boolean
         default: false
-    secrets:
-      GITHUB_TOKEN:
-        required: true
 
 jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - 
         name: Filter build
         uses: dorny/paths-filter@v3
