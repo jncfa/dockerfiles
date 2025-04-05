@@ -17,9 +17,17 @@ on:
         required: false
         type: boolean
         default: false
+      runner:
+        required: false
+        type: string
+        default: ubuntu-latest
 jobs:
-  docker:
-    runs-on: ubuntu-latest
+  changes:
+    runs-on: ${{ inputs.runner }}
+    permissions:
+      pull-requests: read
+    outputs:
+      is_changed: ${{ steps.filter.outputs.dockerfile }}
     steps:
       - uses: actions/checkout@v4
       - 
@@ -28,8 +36,14 @@ jobs:
         id: filter
         with:
           filters: |
-            docker:
+            dockerfile:
               - ${{ inputs.dockerfile }}
+  docker:
+    runs-on: ${{ inputs.runner }}
+    needs: changes
+    if: needs.changes.outputs.is_changed == 'true'
+    steps:
+      - uses: actions/checkout@v4
       - 
         name: Set current date
         id: date
