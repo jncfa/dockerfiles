@@ -1,0 +1,28 @@
+name: Build and push dockerfiles
+on:
+  schedule:
+    # run on the first of every month
+    # * is a special character in YAML so you have to quote this string
+    - cron: "0 0 1 * *"
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+# Cancel in-progress runs of the same workflow
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-everything:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Build and push
+        uses: ./.github/workflow/build_and_push_image.yml
+        with:
+          label: typst
+          tag: latest
+          dockerfile: typst/Dockerfile
+          should-push: true
