@@ -36,7 +36,6 @@ on:
 jobs:
   changes:
     runs-on: ${{ inputs.runner }}
-    if: inputs.force-build == false
     permissions:
       pull-requests: read
     outputs:
