@@ -7,4 +7,4 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=typst-vendor /usr/local/bin/typst /usr/local/bin/typst
+COPY --from=typst-vendor /bin/typst /usr/local/bin/typst
