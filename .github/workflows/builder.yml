@@ -38,5 +38,5 @@ jobs:
       tag: ${{ matrix.tag }}
       dockerfile: ${{ matrix.dockerfile }}
       should-push: ${{ github.ref == 'refs/heads/main' }}
-      force-build: ${{ inputs.force-build || false }}
+      force-build: ${{ inputs.force-build == 'true' || false }}
     secrets: inherit
