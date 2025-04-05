@@ -1,4 +1,4 @@
-name: Reusable workflow example
+name: Build and push image template
 
 on:
   workflow_call:
@@ -17,7 +17,6 @@ on:
         required: false
         type: boolean
         default: false
-
 jobs:
   docker:
     runs-on: ubuntu-latest
@@ -57,7 +56,7 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v6
         with:
-          push: $${{ inputs.should-push }}
+          push: ${{ inputs.should-push }}
           file: ${{ inputs.dockerfile }}
           tags: |
             ghcr.io/${{ github.repository_owner }}/${{ inputs.label }}:${{ inputs.tag }}-${{ matrix.target }}

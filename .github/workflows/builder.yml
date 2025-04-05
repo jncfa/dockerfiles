@@ -15,15 +15,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-everything:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      -
-        name: Build and push
-        uses: ./.github/workflows/build_and_push_image.yml
-        with:
-          label: typst
-          tag: latest
-          dockerfile: typst/Dockerfile
-          should-push: true
+  build-typst:
+    uses: ./.github/workflows/build_and_push_image.yml
+    with:
+      label: typst
+      tag: latest
+      dockerfile: typst/Dockerfile
+      should-push: true
+    secrets: inherit
