@@ -12,7 +12,6 @@ on:
       force-build:
         type: choice
         description: Force build all images
-        default: false
         options: 
         - true
         - false
@@ -36,5 +35,5 @@ jobs:
       tag: ${{ matrix.tag }}
       dockerfile: ${{ matrix.dockerfile }}
       should-push: ${{ github.ref == 'refs/heads/main' }}
-      force-build: ${{ inputs.force-build }}
+      force-build: ${{ inputs.force-build || false }}
     secrets: inherit
