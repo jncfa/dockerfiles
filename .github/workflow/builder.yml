@@ -1,12 +1,12 @@
 name: Build and push dockerfiles
 on:
+  push:
+    branches:
+      - main
   schedule:
     # run on the first of every month
     # * is a special character in YAML so you have to quote this string
     - cron: "0 0 1 * *"
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 # Cancel in-progress runs of the same workflow
@@ -18,6 +18,7 @@ jobs:
   build-everything:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       -
         name: Build and push
         uses: ./.github/workflow/build_and_push_image.yml
