@@ -31,7 +31,10 @@ jobs:
             dockerfile: ubuntu-dev/Dockerfile.noble
           - base-label: typst
             tag: latest
-            dockerfile: typst/Dockerfile
+            dockerfile: typst/Dockerfile.typst
+          - base-label: typstyle
+            tag: latest
+            dockerfile: typst/Dockerfile.typstyle
     uses: ./.github/workflows/build_and_push_image.yml
     with:
       base-label: ${{ matrix.base-label }}

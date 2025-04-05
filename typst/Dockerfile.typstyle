@@ -1,0 +1,6 @@
+FROM rust:bookworm as builder
+RUN cargo install typstyle --locked
+
+FROM debian:bookworm-slim as final
+COPY --from=builder /usr/local/cargo/bin/typstyle /usr/local/bin/typstyle
+ENTRYPOINT [ "typstyle" ]
