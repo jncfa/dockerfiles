@@ -26,7 +26,10 @@ jobs:
     strategy:
       matrix:
         include:
-          - label: typst
+          - base-label: ubuntu-dev
+            tag: latest
+            dockerfile: ubuntu-dev/Dockerfile.noble
+          - base-label: typst
             tag: latest
             dockerfile: typst/Dockerfile
     uses: ./.github/workflows/build_and_push_image.yml

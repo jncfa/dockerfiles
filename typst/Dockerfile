@@ -1,6 +1,6 @@
 FROM ghcr.io/typst/typst:latest as typst-vendor
 
-FROM ubuntu:latest as base
+FROM ghcr.io/jncfa/ubuntu-dev:latest as base
 
 RUN apt-get update && apt-get install -y \
     curl python3 python3-pip \

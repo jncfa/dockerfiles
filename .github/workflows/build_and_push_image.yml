@@ -3,9 +3,13 @@ name: Build and push image template
 on:
   workflow_call:
     inputs:
-      label:
+      base-label:
         required: true
         type: string
+      image-variant:
+        required: false
+        type: string
+        default: ""
       tag:
         required: false
         type: string
@@ -25,6 +29,10 @@ on:
         required: false
         type: boolean
         default: false
+      platforms:
+        required: false
+        type: string
+        default: linux/amd64,linux/arm64
 jobs:
   changes:
     runs-on: ${{ inputs.runner }}
@@ -47,6 +55,12 @@ jobs:
     runs-on: ${{ inputs.runner }}
     needs: changes
     if: inputs.force-build == 'true' || needs.changes.outputs.is_changed == 'true'
+    env:
+      # add "-{{ inputs.image-variant }}" to the end of the image name if image-variant is set
+      image-name: ghcr.io/${{ github.repository_owner }}/${{ inputs.base-label }}${{ inputs.image-variant != '' && format('-{0}', inputs.image-variant) || '' }}:${{ inputs.tag }}
+      
+      # cache only for same the branch
+      image-cacher-name: ghcr.io/${{ github.repository_owner }}/${{ inputs.base-label }}:${{ inputs.tag }}-buildcache-for-${{ github.ref_name }}
     steps:
       - uses: actions/checkout@v4
       - 
@@ -55,9 +69,10 @@ jobs:
         run: |
           echo "date=$(date +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
       - 
-        name: Echo current date for debugging
+        name: Echo vars for debugging
         run: |
           echo "Current date is ${{ steps.date.outputs.date }}"
+          echo "image_name is ${{ env.image-name }}"
       -
         name: Login to GitHub Container Registry
         uses: docker/login-action@v3
@@ -77,10 +92,11 @@ jobs:
         with:
           push: ${{ inputs.should-push }}
           file: ${{ inputs.dockerfile }}
+          platforms: ${{ inputs.platforms }}
           tags: |
-            ghcr.io/${{ github.repository_owner }}/${{ inputs.label }}:${{ inputs.tag }}
-            ghcr.io/${{ github.repository_owner }}/${{ inputs.label }}:${{ inputs.tag }}-${{ steps.date.outputs.date }}
+            ${{ env.image-name }}
+            ${{ env.image-name }}-${{ steps.date.outputs.date }}
           cache-from: |
-            type=registry,ref=ghcr.io/${{ github.repository_owner }}/${{ inputs.label }}:${{ inputs.tag }}-buildcache
+            type=registry,ref=${{ env.image-cacher-name }}
           cache-to: |
-            type=registry,ref=ghcr.io/${{ github.repository_owner }}/${{ inputs.label }}:${{ inputs.tag }}-buildcache,mode=max
+            type=registry,ref=${{ env.image-cacher-name }},mode=max
