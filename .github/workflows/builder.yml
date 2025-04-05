@@ -11,7 +11,7 @@ on:
     inputs:
       force-build:
         type: choice
-        description: Force build of all images
+        description: Force build all images
         options: 
         - true
         - false
