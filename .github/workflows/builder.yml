@@ -15,11 +15,17 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-typst:
+  build-everything:
+    strategy:
+      matrix:
+        include:
+          - label: typst
+            tag: latest
+            dockerfile: typst/Dockerfile
     uses: ./.github/workflows/build_and_push_image.yml
     with:
-      label: typst
-      tag: latest
-      dockerfile: typst/Dockerfile
-      should-push: true
+      label: ${{ matrix.label }}
+      tag: ${{ matrix.tag }}
+      dockerfile: ${{ matrix.dockerfile }}
+      should-push: ${{ github.ref == 'refs/heads/main' }}
     secrets: inherit
