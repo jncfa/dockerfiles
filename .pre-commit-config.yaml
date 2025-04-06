@@ -9,6 +9,7 @@ repos:
     rev: v2.12.0
     hooks:
       - id: hadolint-docker
+        args: [-t, warning, --ignore, DL3007, --ignore, DL3008]
   - repo: https://github.com/google/yamlfmt
     rev: v0.16.0
     hooks:

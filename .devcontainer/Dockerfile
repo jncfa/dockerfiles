@@ -8,6 +8,6 @@ RUN apt-get update && apt-get install -y \
 
 # install direnv and hook into bash
 ENV bin_path /usr/local/bin
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN curl -sfL https://direnv.net/install.sh | bash
 RUN echo 'eval "$(direnv hook bash)"' >> ~/.bashrc
-RUN echo 'direnv allow $WORKSPACE' >> ~/.bashrc
