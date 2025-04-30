@@ -86,7 +86,7 @@ jobs:
         with:
           push: ${{ inputs.should-push }}
           file: ${{ inputs.dockerfile }}
-          build-contexts: ${{ inputs.build-context }}
+          build-contexts: ${{ inputs.build-contexts }}
           platforms: ${{ inputs.platforms }}
           tags: |
             ${{ env.image-name }}
