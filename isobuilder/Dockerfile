@@ -36,12 +36,12 @@ ENV UBUNTU_MIRROR=http://ports.ubuntu.com/ubuntu-ports/
 FROM init-rootfs-cacher-${TARGETARCH:?} AS init-rootfs-cacher
 
 # added all components to make sure we have all the packages we need
-# note that we can use minbase variant, but it is extremely tricky to specify
-# all of the packages we later need, and this is already pretty small already
+# minbase variant can be used but it is extremely tricky to specify all packages we need
+# as we get minor breakages all over the place
 RUN debootstrap --merged-usr --arch="${TARGETARCH}" --components=main,restricted,universe,multiverse --keyring=/usr/share/keyrings/ubuntu-archive-keyring.gpg  "${UBUNTU_VERSION:?}" /rootfs "${UBUNTU_MIRROR:?}" \
     # delete resolv.conf to prevent it from being copied to the final image (systemd autogenerates it)
     && rm /rootfs/etc/resolv.conf \
-    # apt cache is also not needed
+    # apt cache is also not needed (and makes the image bigger)
     && rm -rf /rootfs/var/cache/apt/archives/* && rm -rf /rootfs/var/lib/apt/lists/*
 
 FROM scratch AS init-rootfs

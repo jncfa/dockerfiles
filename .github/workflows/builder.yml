@@ -45,4 +45,5 @@ jobs:
       dockerfile: ${{ matrix.dockerfile }}
       should-push: ${{ github.ref == 'refs/heads/main' }}
       force-build: ${{ inputs.force-build == 'true' || github.ref == 'refs/heads/main' }}
+      build-contexts: ${{ matrix.build-contexts }}
     secrets: inherit
