@@ -32,6 +32,6 @@ DOCKER_ARGS+=(--tag "image-builder/${STAGE}:${DATE}")
 DOCKER_ARGS+=(--target "${STAGE}")
 DOCKER_ARGS+=(--platform linux/arm64)
 DOCKER_ARGS+=(-f Dockerfile)
-
+DOCKER_ARGS+=(--build-context local-context=./build/build-context)
 docker buildx build "${DOCKER_ARGS[@]}" \
-    ./build/build-context
+    .

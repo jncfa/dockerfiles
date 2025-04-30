@@ -11,7 +11,8 @@ ARG UBUNTU_VERSION
 ARG ROS_VERSION
 ARG TARGETARCH
 
-COPY --link apt.conf.d/ /etc/apt/apt.conf.d/
+# hadolint ignore=DL3022
+COPY --link --from=local-context apt.conf.d/ /etc/apt/apt.conf.d/
 
 FROM base AS init-rootfs-cacher-base
 RUN apt-get update && apt-get install -y  \
@@ -53,7 +54,8 @@ ARG TARGETARCH
 COPY --link --from=init-rootfs-cacher /rootfs /
 
 # add our custom apt.conf.d docker hooks
-COPY --link apt.conf.d/ /etc/apt/apt.conf.d/
+# hadolint ignore=DL3022
+COPY --link --from=local-context apt.conf.d/ /etc/apt/apt.conf.d/
 
 ENTRYPOINT [ "/bin/bash" ]
 
@@ -140,7 +142,8 @@ RUN apt-get update && apt-get install -y  \
     && rm -rf /var/lib/apt/lists/*
 
 # add a very cute bg as default
-COPY --link cute-bg.png /usr/share/backgrounds/ubuntu-robotics.png
+# hadolint ignore=DL3022
+COPY --link --from=local-context cute-bg.png /usr/share/backgrounds/ubuntu-robotics.png
 RUN cat <<EOF > /usr/share/glib-2.0/schemas/20_better-background.gschema.override
 [org.gnome.desktop.background:ubuntu]
 picture-uri='file:///usr/share/backgrounds/ubuntu-robotics.png'

@@ -35,7 +35,8 @@ jobs:
             dockerfile: typst/Dockerfile.typstyle
           - base-label: isobuilder
             tag: latest
-            context: "isobuilder/build/build-context"
+            build-contexts: |
+              local-context=./isobuilder/build/build-context
             dockerfile: isobuilder/Dockerfile
     uses: ./.github/workflows/build_and_push_image.yml
     with:
