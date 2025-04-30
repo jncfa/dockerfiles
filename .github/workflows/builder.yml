@@ -13,8 +13,8 @@ on:
         type: choice
         description: Force build all images
         options:
-          - true
-          - false
+          - "true"
+          - "false"
 # Cancel in-progress runs of the same workflow
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -33,6 +33,10 @@ jobs:
           - base-label: typstyle
             tag: latest
             dockerfile: typst/Dockerfile.typstyle
+          - base-label: isobuilder
+            tag: latest
+            context: "isobuilder/build/build-context"
+            dockerfile: isobuilder/Dockerfile
     uses: ./.github/workflows/build_and_push_image.yml
     with:
       base-label: ${{ matrix.base-label }}
