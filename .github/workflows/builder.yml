@@ -33,11 +33,6 @@ jobs:
           - base-label: typstyle
             tag: latest
             dockerfile: typst/Dockerfile.typstyle
-          - base-label: isobuilder
-            tag: latest
-            build-contexts: |
-              local-context=./isobuilder/build/build-context
-            dockerfile: isobuilder/Dockerfile
     uses: ./.github/workflows/build_and_push_image.yml
     with:
       base-label: ${{ matrix.base-label }}
@@ -45,5 +40,4 @@ jobs:
       dockerfile: ${{ matrix.dockerfile }}
       should-push: ${{ github.ref == 'refs/heads/main' }}
       force-build: ${{ inputs.force-build == 'true' || github.ref == 'refs/heads/main' }}
-      build-contexts: ${{ matrix.build-contexts }}
     secrets: inherit
