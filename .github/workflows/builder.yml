@@ -2,7 +2,9 @@ name: Build and push dockerfiles
 on:
   push:
     branches:
-      - main
+      - '**'
+    tags:
+      - '**'
   schedule:
     # run on the first of every month
     # * is a special character in YAML so you have to quote this string
@@ -25,19 +27,17 @@ jobs:
       matrix:
         include:
           - base-label: ubuntu-dev
-            tag: latest
             dockerfile: ubuntu-dev/Dockerfile.noble
           - base-label: typst
-            tag: latest
             dockerfile: typst/Dockerfile.typst
           - base-label: typstyle
-            tag: latest
             dockerfile: typst/Dockerfile.typstyle
+          - base-label: compiler-explorer
+            dockerfile: compiler-explorer/Dockerfile.compiler-explorer
     uses: ./.github/workflows/build_and_push_image.yml
     with:
       base-label: ${{ matrix.base-label }}
-      tag: ${{ matrix.tag }}
+      tag: ${{ github.ref == 'refs/heads/main' && 'latest' || github.ref_name }}
       dockerfile: ${{ matrix.dockerfile }}
-      should-push: ${{ github.ref == 'refs/heads/main' }}
-      force-build: ${{ inputs.force-build == 'true' || github.ref == 'refs/heads/main' }}
+      should-push: true
     secrets: inherit
