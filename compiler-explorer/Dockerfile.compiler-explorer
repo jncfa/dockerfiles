@@ -2,7 +2,7 @@ ARG BASE_TAG=latest
 FROM ubuntu:${BASE_TAG}
 
 # install dumb-init for signal handling
-RUN curl -sLO https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_amd64.deb && dpkg -i dumb-init_*.deb && rm dpkg -i dumb-init_*.deb
+RUN curl -sLO https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_amd64.deb && dpkg -i dumb-init_*.deb && rm dumb-init_*.deb
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
