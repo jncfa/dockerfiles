@@ -1,9 +1,6 @@
 ARG BASE_TAG=latest
 FROM ubuntu:${BASE_TAG}
 
-# install dumb-init for signal handling
-RUN curl -sLO https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_amd64.deb && dpkg -i dumb-init_*.deb && rm dumb-init_*.deb
-
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     file \
@@ -22,6 +19,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     clang-15 \
     gcc-12 \
     && rm -rf /var/lib/apt/lists/*
+
+# install dumb-init for signal handling
+RUN curl -sLO https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_amd64.deb && dpkg -i dumb-init_*.deb && rm dumb-init_*.deb
 
 ENV NVM_DIR="/root/.nvm"
 
