@@ -1,5 +1,13 @@
 ARG BASE_TAG=latest
+ARG COMPILER_EXPLORER_VERSION=ada039818432fcd641c2ae7d4472873e29e6d0ef
+ARG DUMB_INIT_VERSION=1.2.5
+ARG NVM_VERSION=0.40.1
+
 FROM ubuntu:${BASE_TAG}
+
+ARG COMPILER_EXPLORER_VERSION
+ARG DUMB_INIT_VERSION
+ARG NVM_VERSION
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
@@ -18,20 +26,25 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     clang-14 \
     clang-15 \
     gcc-12 \
+    dumb-init \
+    rsync \
     && rm -rf /var/lib/apt/lists/*
-
-# install dumb-init for signal handling
-RUN curl -sLO https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_amd64.deb && dpkg -i dumb-init_*.deb && rm dumb-init_*.deb
 
 ENV NVM_DIR="/root/.nvm"
 
 # Download and install nvm
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash && . "$NVM_DIR/nvm.sh" && nvm install 20 && nvm current
+RUN curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/v${NVM_VERSION}/install.sh" | bash && . "$NVM_DIR/nvm.sh" && nvm install 22 && nvm current
 
 # clone repo and pre-build it
-RUN git clone --depth 1 https://github.com/compiler-explorer/compiler-explorer.git && pushd compiler-explorer && . "$NVM_DIR/nvm.sh" && make prebuild
+RUN mkdir -p /compiler-explorer
 WORKDIR /compiler-explorer
+RUN git init \
+    && git remote add origin https://github.com/compiler-explorer/compiler-explorer.git \
+    && git fetch origin ${COMPILER_EXPLORER_VERSION} \
+    && git reset --hard FETCH_HEAD \
+    && . "$NVM_DIR/nvm.sh" \
+    && make prebuild
 
 EXPOSE 10240/tcp
 ENTRYPOINT ["/usr/bin/dumb-init", "--", "bash", "-c", "source $NVM_DIR/nvm.sh && make run-only"]
