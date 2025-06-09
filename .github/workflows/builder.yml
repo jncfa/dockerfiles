@@ -33,11 +33,13 @@ jobs:
           - base-label: typstyle
             tag: latest
             dockerfile: typst/Dockerfile.typstyle
+          - base-label: compiler-explorer
+            tag: latest
+            dockerfile: compiler-explorer/Dockerfile.compiler-explorer
     uses: ./.github/workflows/build_and_push_image.yml
     with:
       base-label: ${{ matrix.base-label }}
       tag: ${{ matrix.tag }}
       dockerfile: ${{ matrix.dockerfile }}
-      should-push: ${{ github.ref == 'refs/heads/main' }}
-      force-build: ${{ inputs.force-build == 'true' || github.ref == 'refs/heads/main' }}
+      should-push: true
     secrets: inherit
